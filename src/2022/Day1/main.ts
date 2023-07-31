@@ -6,7 +6,7 @@ fs.readFile(path.join(__dirname, 'data.txt'), 'utf8', (err: any, data: string) =
         console.error(err);
         return;
     }
-    
+    console.log('hello')
     const elfInventories = data.trim().split("\n\n").map((inventory) => inventory.split("\n").map(Number));
     const totalCaloriesPerElf = elfInventories.map((inventory) => inventory.reduce((sum, calories) => sum + calories, 0));
 
