@@ -1,9 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-// Rock     A X 1
-// Paper    B Y 2
-// Scessors C Z 3
+type FirstEl = 'A' | 'B' | 'C';
+type SecondEl = 'X' | 'Y' | 'Z';
 
 fs.readFile(path.join(__dirname, 'data.txt'), 'utf8', (err: any, data: string) => {
   if(err) {
@@ -12,10 +11,15 @@ fs.readFile(path.join(__dirname, 'data.txt'), 'utf8', (err: any, data: string) =
   }
 
   console.log('Task #1: ', totalScore(data));
+  console.log('Task #2: ', changedTotalScore(data));
     
 });
 
-const itemsComparator = (firstEl: 'A' | 'B' | 'C', secondEl: 'X' | 'Y' | 'Z') => {
+// Rock     A X 1
+// Paper    B Y 2
+// Scessors C Z 3
+
+const itemsComparator = (firstEl: FirstEl, secondEl: SecondEl) => {
   const elementScore = {X: 1, Y: 2, Z: 3};
   const scoreForRound = {
     A: {X: 3, Y: 6, Z: 0},
@@ -29,9 +33,27 @@ const itemsComparator = (firstEl: 'A' | 'B' | 'C', secondEl: 'X' | 'Y' | 'Z') =>
 const splitInput = (input: string) => input.split('\n').map(pair => pair.split(' '));
 
 const totalScore = (input: string) => {
-  return splitInput(input).reduce((total, currPair) => (total + itemsComparator(currPair[0] as "A" | "B" | "C", currPair[1] as "X" | "Y" | "Z")), 0)
+  return splitInput(input).reduce((total, currPair) => (total + itemsComparator(currPair[0] as FirstEl, currPair[1] as SecondEl)), 0)
 }
 
 /*  */
 
+// Loose X
+// Draw  Y
+// Win   Z
 
+const getSecondElementByResult = (firstEl: FirstEl, secondEl: SecondEl) => {
+  const elementForResult = {
+    A: {X: 'Z', Y: 'X', Z: 'Y'},
+    B: {X: 'X', Y: 'Y', Z: 'Z'},
+    C: {X: 'Y', Y: 'Z', Z: 'X'},
+  };
+
+  return elementForResult[firstEl][secondEl];
+}
+ 
+const changedTotalScore = (input: string) => {
+  return splitInput(input)
+  .map((currPair) => [currPair[0], getSecondElementByResult(currPair[0] as FirstEl, currPair[1] as SecondEl)])
+  .reduce((total, currPair) => (total + itemsComparator(currPair[0] as FirstEl, currPair[1] as SecondEl)), 0);
+}
