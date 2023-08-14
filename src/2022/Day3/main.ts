@@ -7,7 +7,7 @@ fs.readFile(path.join(__dirname, 'data.txt'), 'utf8', (err: any, data: string) =
     return;
   }
 
-  console.log(findOneCommon(data));
+  console.log('Task #1: ', findCommonsSum(data));
     
 });
 
@@ -15,7 +15,6 @@ const splitLine = (line: string) => [line.slice(0, line.length/2), line.slice(li
 
 const findCommon = (line: string[]) => {
   const sets = line.map((item) => new Set(item.split('')));
-
   let common: string = '';
 
   for(const el of sets[1]) {
@@ -27,19 +26,19 @@ const findCommon = (line: string[]) => {
   return common;
 }
 
-const letterIndex = (letter: string) => {
+const letterPriority = (letter: string) => {
   const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
   return letters.indexOf(letter) + 1;
 }
 
-const findOneCommon = (input: string) => {
-  const lines = input.split('\n');
-  const splitedLines = lines.map(splitLine);
-  const commonChars = splitedLines
+const findCommonsSum = (data: string) => {
+  const lines = data
+    .split('\n')
+    .map(splitLine);
+  const commonCharsSum = lines
     .map(findCommon)
-    .map(letterIndex)
+    .map(letterPriority)
     .reduce((accum, currVal) => accum + currVal, 0);
 
-  return commonChars;
+  return commonCharsSum;
 }
